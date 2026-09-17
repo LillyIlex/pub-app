@@ -8,7 +8,10 @@
     "scheme": "pubapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "PubApp uses your location to find pubs nearby."
+      }
     },
     "android": {
       "adaptiveIcon": {

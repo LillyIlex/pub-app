@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { COLORS, FONTS } from "@/constants/theme";
 
 const TABS: {
   name: string;
@@ -15,14 +16,13 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        // Each tab screen draws its own top bar (inside SafeAreaView), so the
+        // native header stays off here.
         headerShown: false,
-        headerStyle: { backgroundColor: "#FFFFFF" },
-        headerShadowVisible: false,
-        headerTitleStyle: { fontFamily: "Poppins_600SemiBold", color: "#0B2B1A" },
-        tabBarActiveTintColor: "#007836",
-        tabBarInactiveTintColor: "#8FA99A",
-        tabBarStyle: { backgroundColor: "#FFFFFF", borderTopColor: "#BFEFD2" },
-        tabBarLabelStyle: { fontFamily: "Poppins_500Medium", fontSize: 11 },
+        tabBarActiveTintColor: COLORS.primaryDark,
+        tabBarInactiveTintColor: COLORS.tabInactive,
+        tabBarStyle: { backgroundColor: COLORS.surface, borderTopColor: COLORS.border },
+        tabBarLabelStyle: { fontFamily: FONTS.medium, fontSize: 11 },
       }}
     >
       {TABS.map((tab) => (

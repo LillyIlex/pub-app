@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "@/constants/theme";
 
 interface TabProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -9,7 +10,7 @@ interface TabProps {
 }
 
 export default function Tab({ icon, text, active = false, onClick }: TabProps) {
-  const color = active ? "#007836" : "#8FA99A";
+  const color = active ? COLORS.primaryDark : COLORS.tabInactive;
 
   return (
     <Pressable onPress={onClick} className="items-center justify-center flex-1 py-1">

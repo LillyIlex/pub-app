@@ -1,13 +1,10 @@
 import { ActivityIndicator, ActivityIndicatorProps } from "react-native";
-
-interface LoadingSpinnerProps extends ActivityIndicatorProps {
-  className?: string;
-}
+import { COLORS } from "@/constants/theme";
 
 export default function LoadingSpinner({
-  color = "#007836",
+  color = COLORS.primaryDark,
   size = "small",
   ...rest
-}: LoadingSpinnerProps) {
+}: ActivityIndicatorProps) {
   return <ActivityIndicator color={color} size={size} {...rest} />;
 }

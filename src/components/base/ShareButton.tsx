@@ -1,6 +1,7 @@
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Share } from "react-native";
+import { COLORS } from "@/constants/theme";
 
 interface ShareButtonProps {
   title: string;
@@ -16,7 +17,7 @@ export default function ShareButton({ title, url, size = 20, className = "" }: S
 
   return (
     <Pressable onPress={onShare} hitSlop={8} className={`active:opacity-70 ${className}`}>
-      <Ionicons name="share-outline" size={size} color="#0B2B1A" />
+      <Ionicons name="share-outline" size={size} color={COLORS.ink} />
     </Pressable>
   );
 }

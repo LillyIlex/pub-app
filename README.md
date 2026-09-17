@@ -1,54 +1,91 @@
-# pub-app — full src/ replacement
+# pub-app update kit #5
 
-This is the complete, current `src/app/` (and everything it depends on) as one consistent
-package — safe to use as a wholesale replacement rather than another diff.
+Full `src/` replacement plus `tailwind.config.js`. No new dependencies.
+Delete your existing `src/` and `tailwind.config.js`, drop these in, then
+`npx expo start -c`.
 
-## What to do with it
+---
 
-1. **Delete your existing `src/` folder entirely**, and delete `tailwind.config.js`,
-   `babel.config.js`, `metro.config.js`, `nativewind-env.d.ts` at your project root.
-2. Copy everything from this kit into your project root — `src/` becomes your new `src/`,
-   and `tailwind.config.js` / `babel.config.js` / `metro.config.js` /
-   `nativewind-env.d.ts` / `scripts/create-component.js` land back at the root.
-3. Leave `package.json`, `app.json`, `tsconfig.json`, and `node_modules` alone — none of
-   those changed, and this kit assumes the packages from the earlier setup steps
-   (`nativewind`, `react-native-maps`, `expo-location`, `@react-native-async-storage/async-storage`,
-   `@expo-google-fonts/poppins`, etc.) are already installed.
-4. `npx expo start -c` to clear the Metro cache and reload.
+## The card regression — what actually broke
 
-## `src/app/` route map
+The images vanished because I sized them with a percentage Tailwind class
+(`w-2/5 h-full`) on a React Native `Image` sitting inside a fixed-height flex row.
+Percentage widths via `className` don't reliably resolve on `Image` in that context —
+it collapsed to zero width. Now sized with explicit `style` numbers from
+`CARD.imageWidth`, which is also why they're back to a predictable size.
 
-```
-src/app/
-├── _layout.tsx              Root Stack: index → (tabs) → venue/[id] (modal) → +not-found
-├── index.tsx                 Landing search screen (full bleed, NOT a tab)
-├── +not-found.tsx             Fallback for unmatched routes
-├── (tabs)/
-│   ├── _layout.tsx            Tab bar: Results / Map / Favourites
-│   ├── index.tsx               Results tab → screens/ListScreen
-│   ├── map.tsx                 Map tab → screens/MapScreen
-│   └── favourites.tsx          Favourites tab → screens/FavouritesScreen
-└── venue/
-    └── [id].tsx                Venue detail, presented as a modal → screens/VenueDetailScreen
-```
+The pills shrinking and the radius change were me over-tuning things that were already
+right. Card radius is back to `rounded-2xl`, pills back to `px-2.5 py-1.5` with 13px
+icons and 11px text. Card width/height kept as they were, since those were good.
 
-Every route file is a thin wrapper — the actual screen content lives in `src/screens/`,
-which keeps `app/` purely about routing.
+## Search inputs
 
-## Everything else in this kit
+`Input` lost its `size` variants entirely and went back to normal height with even
+`py-2` padding. The left search icon is gone; the **search icon now sits on the right
+as the submit button**, on both the landing screen and the results toolbar (the green
+arrow is gone).
 
-- `src/screens/` — LandingSearchScreen, ListScreen, MapScreen, FavouritesScreen,
-  VenueDetailScreen, LoadingScreen (app boot), ErrorScreen, NoMatchesScreen
-- `src/components/base/` — the small reusable primitives (Title, Button, Input, Pill, etc.)
-- `src/components/group/` — Card, CurrentLocation
-- `src/components/blocks/` — CardList, FiltersList, Header (unused by any route right now,
-  kept for reuse), LocationModal, VenueDetailBlock
-- `src/constants/search.ts` — distance options (in miles) and the feature filter list
-- `src/data/mockVenues.ts` — placeholder pub data until the real API is wired in
-- `src/lib/geocoding.ts` — postcode/town resolution + autocomplete stub
-- `scripts/create-component.js` — `npm run gen:component <Name> [base|group|blocks]`
+**The enter key now works.** Two things were wrong: `onSubmitEditing` fired a handler
+that bailed out unless a suggestion had been tapped first, and the results toolbar
+never passed `onSubmit` at all. Both screens now accept the confirmed selection *or*
+raw typed text, so return always does something.
 
-## Known TODOs (search for `TODO` in the code)
+## Distance
 
-- `ListScreen.tsx` — swap the mock `setTimeout` for a real search API call
-- `src/lib/geocoding.ts` — swap the placeholder town list for a real places/geocoding API
+Dropdown removed. `DistancePills` is a clickable pill row (1 / 3 / 5 miles), used on
+the landing screen (`tone="light"`) and in the drawer (`tone="dark"`). The distance is
+still applied to results, but its only visual feedback in the toolbars is the white
+pill with the navigate arrow, as you asked.
+
+## Filters drawer
+
+Slides in **from the left**, now `w-11/12` (was `w-4/5`), wrapped in
+`SafeAreaView edges={["top","bottom"]}` so nothing sits under the notch or home
+indicator, with the scroll area padded top and bottom and the action buttons pinned
+below a divider.
+
+The count badge is gone from `FilterButton`, and the active state no longer swaps the
+icon — it just changes colour.
+
+## Cards
+
+- Available features on the **top row**, unavailable underneath, as two separate
+  wrapped rows.
+- Results are **sorted by how many active filters each venue matches**, best first,
+  with distance order preserved within ties. `sortByFilterMatch()` lives in
+  `constants/search.ts` and is used by both the Results and Map tabs.
+
+## Favourites
+
+- On result and map cards, un-favouriting is now a **straight toggle** — no modal.
+- In the **Favourites tab** it still confirms, since removal makes the card disappear.
+  Driven by a `confirmRemove` prop threaded `CardList → Card → FavouriteToggle`.
+- The "Your favourites" header now uses a heart icon (`ScreenHeader` gained a
+  `locationIcon` prop).
+
+## New location flow
+
+`LocationModal` is replaced by `NewLocationModal`, a **two-step bottom sheet**. Step
+one confirms where you're searching; "Search new location" swaps the same sheet to a
+search field with autocomplete, and searching from there updates results **in place**
+rather than navigating anywhere. That's what was broken before — pushing to `/` landed
+on the landing screen but the old params were still mounted behind it, so nothing
+appeared to happen.
+
+## Other
+
+- `Button`: even `px-5 py-3` with `min-h-[48px]`, `rounded-2xl`.
+- Venue detail: `gap-y-7` between sections, `gap-y-3` within them, more bottom padding.
+- Removed `Dropdown` (superseded by `DistancePills`) and `LocationModal` (superseded by
+  `NewLocationModal`).
+
+---
+
+## Still TODO before API work
+
+1. `src/screens/ListScreen.tsx` — the `setTimeout` mock fetch
+2. `src/screens/MapScreen.tsx` — `searchThisArea()`, and geocoding the location chosen
+   in `NewLocationModal` to re-centre the map
+3. `src/screens/VenueDetailScreen.tsx` — `getVenue()`
+4. `src/lib/geocoding.ts` — `fetchLocationSuggestions()` town list and the town-name
+   branch of `resolveLocation()`

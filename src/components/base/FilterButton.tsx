@@ -1,5 +1,6 @@
 import { Pressable, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "../../constants/theme";
 
 interface FilterButtonProps {
   open: boolean;
@@ -11,12 +12,19 @@ export default function FilterButton({ open, onClick, className = "" }: FilterBu
   return (
     <Pressable
       onPress={onClick}
-      className={`flex-row items-center gap-1 rounded-full bg-white px-3 py-1.5 border-2 ${
-       "border-primary-dark"
+      className={`flex-row items-center justify-center gap-1.5 rounded-full bg-white px-4 py-2.5 min-h-[40px] border-[1px] ${
+        open ? "border-active" : "border-primary-dark"
       } ${className}`}
     >
-        <Ionicons name={!open ? "options-outline" : "close"} size={14} color={"#007836"} />
-        <Text className={`font-poppins-medium text-xs ${ "text-primary-dark"}`}>
+      <Ionicons
+        name="options-outline"
+        size={16}
+        color={open ? COLORS.active : COLORS.primaryDark}
+      />
+      <Text
+        className={`font-poppins-bold text-xs leading-none ${open ? "text-active" : "text-primary-dark"}`}
+        style={{ includeFontPadding: false }}
+      >
         Filters
       </Text>
     </Pressable>

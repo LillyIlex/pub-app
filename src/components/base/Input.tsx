@@ -1,16 +1,16 @@
 import { TextInput, TextInputProps, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "../../constants/theme";
 
 interface InputProps extends TextInputProps {
-  showSearchIcon?: boolean;
-  showGoButton?: boolean;
+  /** Renders the search icon on the right as the submit button. */
+  showSearchButton?: boolean;
   onSubmit?: () => void;
   className?: string;
 }
 
 export default function Input({
-  showSearchIcon = false,
-  showGoButton = false,
+  showSearchButton = false,
   onSubmit,
   onSubmitEditing,
   className = "",
@@ -18,29 +18,31 @@ export default function Input({
 }: InputProps) {
   return (
     <View
-      className={`flex-row items-center bg-white border border-border rounded-full pl-4 pr-1.5 py-1.5 ${className}`}
+      className={`flex-row items-center bg-white border border-border rounded-full pl-4 pr-2 py-2 ${className}`}
     >
-      {showSearchIcon && <Ionicons name="search" size={16} color="#6B8F7C" style={{ marginRight: 6 }} />}
-        <TextInput
-            placeholderTextColor="#6B8F7C"
-            className="flex-1 font-poppins text-sm text-ink"
-            returnKeyType="search"
-            autoCorrect={false}
-            autoComplete="off"
-            spellCheck={false}
-            onSubmitEditing={(e) => {
-                onSubmitEditing?.(e);
-                onSubmit?.();
-            }}
-            {...rest}
-        />
-      {showGoButton && (
+      <TextInput
+        placeholderTextColor={COLORS.muted}
+        className="flex-1 font-poppins text-sm text-ink"
+        returnKeyType="search"
+        // Our own suggestion list is the only autocomplete UI we want.
+        autoCorrect={false}
+        autoComplete="off"
+        autoCapitalize="words"
+        spellCheck={false}
+        // Fires on the keyboard's return/search key.
+        onSubmitEditing={(e) => {
+          onSubmitEditing?.(e);
+          onSubmit?.();
+        }}
+        {...rest}
+      />
+      {showSearchButton && (
         <Pressable
           onPress={onSubmit}
           hitSlop={8}
-          className="w-8 h-8 rounded-full bg-primary items-center justify-center active:opacity-80"
+          className="w-9 h-9 rounded-full items-center justify-center active:opacity-60"
         >
-          <Ionicons name="arrow-forward" size={16} color="#0B2B1A" />
+          <Ionicons name="search" size={20} color={COLORS.primaryDark} />
         </Pressable>
       )}
     </View>

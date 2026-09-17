@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Pressable, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import { COLORS } from "@/constants/theme";
 
 interface CurrentLocationProps {
   onPress?: () => void;
@@ -27,8 +28,8 @@ export default function CurrentLocation({ onPress, className = "" }: CurrentLoca
 
   return (
     <Pressable onPress={onPress} hitSlop={8} className={`flex-row items-center gap-1 ${className}`}>
-      <Ionicons name="location-outline" size={16} color="#007836" />
-      <Text className="font-poppins-medium text-xs text-primary-dark">{label}</Text>
+      <Ionicons name="location-outline" size={16} color={COLORS.primaryDark} />
+      <Text className="font-poppins-medium text-s text-primary-dark">{label}</Text>
     </Pressable>
   );
 }

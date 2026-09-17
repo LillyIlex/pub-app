@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
+import { COLORS } from "../constants/theme";
 
 const GLASS_PATH = "M6 2 H30 L27.5 44 C27.5 48 25.5 50 18 50 C10.5 50 8.5 48 8.5 44 Z";
 
@@ -17,12 +18,12 @@ function Glass() {
     <Svg width={36} height={52} viewBox="0 0 36 52" fill="none">
       <Path
         d={GLASS_PATH}
-        stroke="#FFFFFF"
+        stroke={COLORS.surface}
         strokeWidth={2.5}
         strokeLinejoin="round"
         fill="rgba(255,255,255,0.12)"
       />
-      <Line x1={9} y1={13} x2={27} y2={13} stroke="#FFFFFF" strokeWidth={1.5} opacity={0.5} />
+      <Line x1={9} y1={13} x2={27} y2={13} stroke={COLORS.surface} strokeWidth={1.5} opacity={0.5} />
     </Svg>
   );
 }

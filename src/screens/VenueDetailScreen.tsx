@@ -2,21 +2,38 @@ import { useEffect, useState } from "react";
 import VenueDetailBlock, { VenueDetailData } from "../components/blocks/VenueDetailBlock";
 import LoadingScreen from "./LoadingScreen";
 import ErrorScreen from "./ErrorScreen";
-
-// Replace with a real fetch-by-id from your pub-info API.
-async function getVenue(id: string): Promise<VenueDetailData | null> {
-  return null;
-}
-
-interface VenueDetailScreenProps {
-  id?: string;
-}
+import { getMockVenueById } from "@/data/mockVenues";
 
 /**
- * Presented as a modal from app/venue/[id].tsx, which gives it the native
- * "x" close button on iOS for free.
+ * TODO: replace with a real fetch-by-id from your pub-info API.
+ * Currently resolves against the mock dataset so the screen renders end to end.
  */
-export default function VenueDetailScreen({ id }: VenueDetailScreenProps) {
+async function getVenue(id: string): Promise<VenueDetailData | null> {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  const venue = getMockVenueById(id);
+  if (!venue) return null;
+
+  return {
+    id: venue.id,
+    title: venue.title,
+    subtitle: venue.subtitle,
+    description: venue.description,
+    image: venue.image,
+    features: venue.features,
+    address: venue.address,
+    lat: venue.lat,
+    lng: venue.lng,
+    phone: venue.phone,
+    website: venue.website,
+    openingHours: venue.openingHours,
+    priceRange: venue.priceRange,
+    rating: venue.rating,
+    distance: venue.distance,
+    details: venue.details,
+  };
+}
+
+export default function VenueDetailScreen({ id }: { id?: string }) {
   const [venue, setVenue] = useState<VenueDetailData | null | undefined>(undefined);
 
   useEffect(() => {

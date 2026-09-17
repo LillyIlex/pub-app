@@ -1,5 +1,6 @@
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "../../constants/theme";
 
 interface FavouritesButtonProps {
   active: boolean;
@@ -16,7 +17,11 @@ export default function FavouritesButton({
 }: FavouritesButtonProps) {
   return (
     <Pressable onPress={onToggle} hitSlop={8} className={`active:opacity-70 ${className}`}>
-      <Ionicons name={active ? "heart" : "heart-outline"} size={size} color={active ? "#007836" : "#0B2B1A"} />
+      <Ionicons
+        name={active ? "heart" : "heart-outline"}
+        size={size}
+        color={active ? COLORS.primaryDark : COLORS.ink}
+      />
     </Pressable>
   );
 }

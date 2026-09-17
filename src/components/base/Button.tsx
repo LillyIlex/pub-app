@@ -11,7 +11,7 @@ interface ButtonProps extends Omit<PressableProps, "onPress"> {
 
 const VARIANT_BG: Record<Variant, string> = {
   primary: "bg-primary",
-  secondary: "bg-white border border-primary-dark",
+  secondary: "bg-white border-2 border-primary-dark",
 };
 
 const VARIANT_TEXT: Record<Variant, string> = {
@@ -29,10 +29,16 @@ export default function Button({
   return (
     <Pressable
       onPress={onClick}
-      className={`rounded-[5px] px-5 py-3 items-center justify-center active:opacity-80 ${VARIANT_BG[variant]} ${className}`}
+      // Even padding all round; min-height keeps both variants consistent.
+      className={`rounded-2xl px-5 py-3 min-h-[48px] items-center justify-center active:opacity-80 ${VARIANT_BG[variant]} ${className}`}
       {...rest}
     >
-      <Text className={`font-poppins-semibold text-sm ${VARIANT_TEXT[variant]}`}>{text}</Text>
+      <Text
+        className={`font-poppins-semibold text-sm ${VARIANT_TEXT[variant]}`}
+        style={{ includeFontPadding: false }}
+      >
+        {text}
+      </Text>
     </Pressable>
   );
 }

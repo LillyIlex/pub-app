@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "../../constants/theme";
 
 interface IconButtonProps {
   image: keyof typeof Ionicons.glyphMap;
@@ -15,7 +16,7 @@ export default function IconButton({
   text,
   onClick,
   size = 22,
-  color = "#0B2B1A",
+  color = COLORS.ink,
   className = "",
 }: IconButtonProps) {
   return (

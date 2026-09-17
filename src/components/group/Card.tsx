@@ -66,29 +66,29 @@ export default function Card({
           <Title text={title} size="sm" numberOfLines={1} />
           {subtitle ? <Paragraph text={subtitle} size="sm" muted numberOfLines={1} /> : null}
         </View>
-<View className={`flex items-center justify-between gap-6 ${isRow ? "flex-col" : "flex-row"}`}>
-        {/* Available features on the top row, missing ones underneath. */}
-        <View className={`gap-1 ${isRow ? "flex-col" : "flex-row"}`}>
-          {available.length > 0 && (
-            <View className="flex-row flex-wrap gap-1">
-              {available.map((f) => (
-                <FeaturePill key={f.id} icon={f.icon} available />
-              ))}
+        <View className={`flex gap-2 ${isRow ? "flex-col" : "flex-row gap-6 items-center justify-between"}`}>
+            {/* Available features on the top row, missing ones underneath. */}
+            <View className={`gap-1 ${isRow ? "flex-col" : "flex-row"}`}>
+              {available.length > 0 && (
+                <View className="flex-row flex-wrap gap-1">
+                  {available.map((f) => (
+                    <FeaturePill key={f.id} icon={f.icon} available />
+                  ))}
+                </View>
+              )}
+              {unavailable.length > 0 && (
+                <View className="flex-row flex-wrap gap-1">
+                  {unavailable.map((f) => (
+                    <FeaturePill key={f.id} icon={f.icon} available={false} />
+                  ))}
+                </View>
+              )}
             </View>
-          )}
-          {unavailable.length > 0 && (
-            <View className="flex-row flex-wrap gap-1">
-              {unavailable.map((f) => (
-                <FeaturePill key={f.id} icon={f.icon} available={false} />
-              ))}
-            </View>
-          )}
-        </View>
 
-        {distance ? (
-          <Paragraph text={distance} size="sm" className="text-link font-poppins-medium" />
-        ) : null}
-      </View>
+            {distance ? (
+              <Paragraph text={distance} size="sm" className="text-link font-poppins-medium" />
+            ) : null}
+          </View>
 
       </View>
       <View className="absolute top-2 right-2 bg-white/90 rounded-full p-1.5">
